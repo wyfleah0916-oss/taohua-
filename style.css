@@ -1,0 +1,1141 @@
+/* ============================
+   赛博桃花检测器 - 全局样式
+   ============================ */
+
+/* 基础重置 */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  width: 100%; height: 100%;
+  font-family: 'Courier New', 'SimHei', monospace;
+  background: #0a0a0a;
+  color: #00ff88;
+  overflow: hidden;
+}
+
+/* 场景控制 */
+.scene {
+  position: fixed; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.6s ease;
+  z-index: 10;
+}
+.scene.active {
+  opacity: 1; pointer-events: all;
+}
+
+/* 粒子画布 */
+.particle-canvas {
+  position: fixed; inset: 0;
+  z-index: 1; pointer-events: none;
+}
+
+/* ============================
+   第一步：启动页/雷达
+   ============================ */
+.radar-container {
+  position: relative;
+  width: 280px; height: 280px;
+  margin-bottom: 2rem;
+}
+@media(min-width:768px) {
+  .radar-container { width: 360px; height: 360px; }
+}
+
+.radar-screen {
+  position: relative;
+  width: 100%; height: 100%;
+  border-radius: 50%;
+  border: 2px solid #00ff8855;
+  background: radial-gradient(circle, #001a0d 0%, #000a05 70%, #000 100%);
+  overflow: hidden;
+  box-shadow:
+    0 0 40px #00ff8822,
+    0 0 80px #00ff8811,
+    inset 0 0 60px #00ff8808;
+}
+
+/* 雷达网格 */
+.radar-grid {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(0deg, transparent 49.5%, #00ff8815 49.5%, #00ff8815 50.5%, transparent 50.5%),
+    linear-gradient(90deg, transparent 49.5%, #00ff8815 49.5%, #00ff8815 50.5%, transparent 50.5%);
+  background-size: 100% 100%;
+}
+.radar-grid::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(45deg, transparent 49.5%, #00ff8808 49.5%, #00ff8808 50.5%, transparent 50.5%),
+    linear-gradient(-45deg, transparent 49.5%, #00ff8808 49.5%, #00ff8808 50.5%, transparent 50.5%);
+}
+
+/* 雷达环 */
+.radar-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid #00ff8820;
+}
+.ring-1 { inset: 15%; }
+.ring-2 { inset: 30%; }
+.ring-3 { inset: 45%; }
+
+/* 雷达扫描线 */
+.radar-sweep {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 50%; height: 2px;
+  transform-origin: left center;
+  background: linear-gradient(90deg, #00ff88cc, transparent);
+  animation: sweep 3s linear infinite;
+}
+.radar-sweep::before {
+  content: '';
+  position: absolute;
+  top: -40px; left: 0;
+  width: 100%; height: 80px;
+  background: linear-gradient(90deg, #00ff8833, transparent);
+  transform-origin: left center;
+}
+
+@keyframes sweep {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* 像素佛头 */
+.pixel-buddha {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px; height: 90px;
+  image-rendering: pixelated;
+  z-index: 5;
+  filter: drop-shadow(0 0 12px #00ff8866);
+}
+
+/* 雷达光点 */
+.radar-dots {
+  position: absolute; inset: 0;
+}
+.radar-dot {
+  position: absolute;
+  width: 4px; height: 4px;
+  background: #00ff88;
+  border-radius: 50%;
+  animation: dotPulse 2s ease-in-out infinite;
+  box-shadow: 0 0 6px #00ff88;
+}
+@keyframes dotPulse {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.8); }
+}
+
+/* 启动页文字 */
+.landing-text {
+  text-align: center;
+  z-index: 5;
+}
+
+/* 故障文字效果 */
+.glitch-text {
+  position: relative;
+  text-shadow: 0 0 20px #00ff8844;
+}
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  opacity: 0.8;
+}
+.glitch-text::before {
+  color: #ff0040;
+  animation: glitch1 3s infinite;
+  clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+}
+.glitch-text::after {
+  color: #00d4ff;
+  animation: glitch2 3s infinite;
+  clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
+}
+@keyframes glitch1 {
+  0%, 90%, 100% { transform: translate(0); }
+  92% { transform: translate(-3px, 1px); }
+  94% { transform: translate(3px, -1px); }
+  96% { transform: translate(-2px, 2px); }
+}
+@keyframes glitch2 {
+  0%, 88%, 100% { transform: translate(0); }
+  90% { transform: translate(3px, -2px); }
+  93% { transform: translate(-3px, 1px); }
+  95% { transform: translate(2px, 2px); }
+}
+
+/* 启动按钮 */
+.start-btn {
+  position: relative;
+  padding: 14px 36px;
+  font-size: 1.1rem;
+  font-family: inherit;
+  color: #00ff88;
+  background: transparent;
+  border: 2px solid #00ff88;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s;
+  letter-spacing: 2px;
+}
+.start-btn:hover {
+  background: #00ff8822;
+  box-shadow: 0 0 30px #00ff8844, inset 0 0 30px #00ff8811;
+  transform: scale(1.05);
+}
+.btn-scan-line {
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, #00ff8833, transparent);
+  animation: btnScan 2s linear infinite;
+}
+@keyframes btnScan {
+  from { left: -100%; }
+  to { left: 100%; }
+}
+
+/* 扫描线覆盖 */
+.scanline-overlay {
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    #00ff8805 2px,
+    #00ff8805 4px
+  );
+  pointer-events: none;
+  z-index: 100;
+}
+
+/* ============================
+   第二步：数据流截屏
+   ============================ */
+#scene-stream {
+  background: #050510;
+}
+
+.stream-container {
+  position: absolute; inset: 0;
+  overflow: hidden;
+}
+
+/* 数据流元素基础样式 */
+.stream-item {
+  position: absolute;
+  white-space: nowrap;
+  font-size: 1rem;
+  opacity: 0;
+  animation: streamFloat linear forwards;
+  text-shadow: 0 0 8px currentColor;
+  pointer-events: none;
+}
+.stream-item.text-meme {
+  color: #00ff88;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+.stream-item.text-emoji {
+  font-size: 1.8rem;
+  filter: none;
+  text-shadow: none;
+}
+.stream-item.text-symbol {
+  color: #ff00ff;
+  font-size: 1.4rem;
+}
+.stream-item.text-code {
+  color: #00d4ff;
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+.stream-item.text-barcode {
+  font-family: 'Courier New', monospace;
+  color: #ffffff33;
+  font-size: 0.6rem;
+  letter-spacing: 2px;
+}
+
+@keyframes streamFloat {
+  0% { transform: translateY(100vh); opacity: 0; }
+  5% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-100px); opacity: 0; }
+}
+
+/* 倒计时条 */
+.countdown-bar {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 4px;
+  background: #ffffff11;
+  z-index: 50;
+}
+.countdown-inner {
+  height: 100%;
+  background: linear-gradient(90deg, #00ff88, #ff00ff, #00d4ff);
+  transition: width 0.1s linear;
+  box-shadow: 0 0 10px #00ff88;
+}
+
+.countdown-text {
+  position: fixed;
+  top: 16px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.85rem;
+  color: #00ff8888;
+  z-index: 50;
+  letter-spacing: 3px;
+}
+
+/* 量子截屏按钮 */
+.capture-btn {
+  position: fixed;
+  bottom: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 60;
+  padding: 18px 40px;
+  font-size: 1.2rem;
+  font-family: inherit;
+  color: #fff;
+  background: linear-gradient(135deg, #ff006688, #ff00ff88);
+  border: 2px solid #ff00ff;
+  cursor: pointer;
+  border-radius: 60px;
+  transition: all 0.3s;
+  animation: captureFloat 2s ease-in-out infinite;
+}
+.capture-btn:hover {
+  box-shadow: 0 0 40px #ff00ff66;
+  transform: translateX(-50%) scale(1.08);
+}
+.capture-pulse {
+  position: absolute;
+  inset: -4px;
+  border: 2px solid #ff00ff44;
+  border-radius: 60px;
+  animation: pulseRing 1.5s ease-out infinite;
+}
+@keyframes pulseRing {
+  from { transform: scale(1); opacity: 1; }
+  to { transform: scale(1.3); opacity: 0; }
+}
+@keyframes captureFloat {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-6px); }
+}
+
+.capture-label {
+  position: relative;
+  z-index: 2;
+  text-shadow: 0 0 10px #ff00ff;
+}
+
+/* 拍照闪光 */
+.flash-overlay {
+  position: fixed; inset: 0;
+  background: white;
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+}
+.flash-overlay.flash {
+  animation: flashAnim 0.6s ease-out forwards;
+}
+@keyframes flashAnim {
+  0% { opacity: 1; }
+  30% { opacity: 0.8; }
+  100% { opacity: 0; }
+}
+
+/* CRT扫描线 */
+.crt-lines {
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 1px,
+    #00000015 1px,
+    #00000015 2px
+  );
+  pointer-events: none;
+  z-index: 40;
+}
+
+/* ============================
+   截图框 - 量子观测窗口
+   ============================ */
+.capture-frame-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.capture-frame {
+  position: relative;
+  width: 80%;
+  max-width: 420px;
+  height: 55vh;
+  border: 2px solid #00ff8866;
+  border-radius: 4px;
+  box-shadow:
+    0 0 20px #00ff8822,
+    0 0 60px #00ff8811,
+    inset 0 0 30px #00ff8808;
+  animation: framePulse 3s ease-in-out infinite;
+}
+
+/* 截图框脉冲呼吸动画 */
+@keyframes framePulse {
+  0%, 100% {
+    border-color: #00ff8866;
+    box-shadow: 0 0 20px #00ff8822, 0 0 60px #00ff8811, inset 0 0 30px #00ff8808;
+  }
+  50% {
+    border-color: #00ff88aa;
+    box-shadow: 0 0 30px #00ff8844, 0 0 80px #00ff8822, inset 0 0 40px #00ff8812;
+  }
+}
+
+/* 四角标记 */
+.frame-corner {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  z-index: 2;
+}
+.frame-corner::before,
+.frame-corner::after {
+  content: '';
+  position: absolute;
+  background: #00ff88;
+  box-shadow: 0 0 8px #00ff88;
+}
+
+/* 左上角 */
+.frame-corner.top-left {
+  top: -2px; left: -2px;
+}
+.frame-corner.top-left::before {
+  top: 0; left: 0;
+  width: 24px; height: 3px;
+}
+.frame-corner.top-left::after {
+  top: 0; left: 0;
+  width: 3px; height: 24px;
+}
+
+/* 右上角 */
+.frame-corner.top-right {
+  top: -2px; right: -2px;
+}
+.frame-corner.top-right::before {
+  top: 0; right: 0;
+  width: 24px; height: 3px;
+}
+.frame-corner.top-right::after {
+  top: 0; right: 0;
+  width: 3px; height: 24px;
+}
+
+/* 左下角 */
+.frame-corner.bottom-left {
+  bottom: -2px; left: -2px;
+}
+.frame-corner.bottom-left::before {
+  bottom: 0; left: 0;
+  width: 24px; height: 3px;
+}
+.frame-corner.bottom-left::after {
+  bottom: 0; left: 0;
+  width: 3px; height: 24px;
+}
+
+/* 右下角 */
+.frame-corner.bottom-right {
+  bottom: -2px; right: -2px;
+}
+.frame-corner.bottom-right::before {
+  bottom: 0; right: 0;
+  width: 24px; height: 3px;
+}
+.frame-corner.bottom-right::after {
+  bottom: 0; right: 0;
+  width: 3px; height: 24px;
+}
+
+/* 框顶部标签 */
+.frame-label-top {
+  position: absolute;
+  top: -32px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.75rem;
+  color: #00ff88aa;
+  letter-spacing: 4px;
+  white-space: nowrap;
+  text-shadow: 0 0 10px #00ff8844;
+  animation: labelBlink 2s ease-in-out infinite;
+}
+
+/* 框底部标签 */
+.frame-label-bottom {
+  position: absolute;
+  bottom: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.7rem;
+  color: #ff00ff88;
+  letter-spacing: 3px;
+  white-space: nowrap;
+  text-shadow: 0 0 8px #ff00ff44;
+}
+
+@keyframes labelBlink {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+/* 框内扫描线动画 */
+.frame-scan-line {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00ff8866, #00ff88cc, #00ff8866, transparent);
+  box-shadow: 0 0 12px #00ff8844;
+  animation: scanDown 4s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes scanDown {
+  0% { top: 0; opacity: 0; }
+  5% { opacity: 1; }
+  95% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* 框外区域半透明遮罩效果（通过box-shadow实现） */
+.capture-frame::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.45);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* 截屏瞬间的框闪烁效果 */
+.capture-frame.captured {
+  animation: frameCaptured 0.6s ease-out forwards;
+  border-color: #ff00ff;
+}
+.capture-frame.captured .frame-corner::before,
+.capture-frame.captured .frame-corner::after {
+  background: #ff00ff;
+  box-shadow: 0 0 12px #ff00ff;
+}
+
+@keyframes frameCaptured {
+  0% { box-shadow: 0 0 0 0 #ff00ff88, inset 0 0 0 0 #ff00ff44; }
+  50% { box-shadow: 0 0 60px 10px #ff00ff44, inset 0 0 40px #ff00ff22; }
+  100% { box-shadow: 0 0 30px 5px #ff00ff22, inset 0 0 20px #ff00ff11; }
+}
+
+/* ============================
+   第三步：报告页
+   ============================ */
+#scene-report {
+  background: #0a0a12;
+  overflow-y: auto;
+  overflow-x: hidden;
+  justify-content: flex-start;
+  padding: 20px 10px 40px;
+}
+
+.report-wrapper {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 10px;
+}
+
+/* 报告卡片 */
+.report-card {
+  background: linear-gradient(180deg, #0d1117 0%, #101820 100%);
+  border: 1px solid #00ff8833;
+  border-radius: 12px;
+  padding: 24px 20px;
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.report-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 2px;
+  background: linear-gradient(90deg, transparent, #00ff88, #ff00ff, transparent);
+}
+
+/* 报告标题 */
+.report-title {
+  text-align: center;
+  font-size: 0.85rem;
+  line-height: 1.8;
+  color: #00ff88cc;
+  margin-bottom: 20px;
+  padding: 16px;
+  border: 1px dashed #00ff8833;
+  border-radius: 8px;
+  background: #00ff8808;
+}
+.report-title .title-main {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #00ff88;
+  display: block;
+  margin-bottom: 8px;
+}
+.report-title .report-id {
+  font-size: 0.7rem;
+  color: #00ff8866;
+  letter-spacing: 2px;
+}
+
+/* 截屏样本 - 标签列表形式 */
+.captured-sample-tags {
+  width: 100%;
+  border: 1px solid #00ff8844;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 16px 0;
+  padding: 16px;
+  background: #050510;
+  position: relative;
+}
+.captured-sample-tags::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 1px;
+  background: linear-gradient(90deg, transparent, #00ff8866, transparent);
+}
+.sample-tags-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+}
+.sample-tag {
+  display: inline-block;
+  padding: 5px 12px;
+  border: 1px solid;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  transition: all 0.3s;
+  animation: tagAppear 0.5s ease forwards;
+  opacity: 0;
+}
+.sample-tag:nth-child(1) { animation-delay: 0.1s; }
+.sample-tag:nth-child(2) { animation-delay: 0.15s; }
+.sample-tag:nth-child(3) { animation-delay: 0.2s; }
+.sample-tag:nth-child(4) { animation-delay: 0.25s; }
+.sample-tag:nth-child(5) { animation-delay: 0.3s; }
+.sample-tag:nth-child(6) { animation-delay: 0.35s; }
+.sample-tag:nth-child(7) { animation-delay: 0.4s; }
+.sample-tag:nth-child(8) { animation-delay: 0.45s; }
+.sample-tag:nth-child(9) { animation-delay: 0.5s; }
+.sample-tag:nth-child(10) { animation-delay: 0.55s; }
+.sample-tag:nth-child(11) { animation-delay: 0.6s; }
+.sample-tag:nth-child(12) { animation-delay: 0.65s; }
+.sample-tag:nth-child(13) { animation-delay: 0.7s; }
+.sample-tag:nth-child(14) { animation-delay: 0.75s; }
+.sample-tag:nth-child(15) { animation-delay: 0.8s; }
+
+@keyframes tagAppear {
+  from { opacity: 0; transform: scale(0.7); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* 截屏样本 - 旧版绝对定位（保留兼容） */
+.captured-sample {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  border: 1px solid #00ff8844;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 16px 0;
+  background: #050510;
+}
+.captured-sample .sample-label {
+  position: absolute;
+  top: 8px; left: 8px;
+  background: #ff00ff88;
+  color: white;
+  font-size: 0.65rem;
+  padding: 2px 8px;
+  border-radius: 4px;
+  z-index: 5;
+}
+.captured-sample .sample-content {
+  position: absolute; inset: 0;
+  overflow: hidden;
+}
+.captured-sample .sample-item {
+  position: absolute;
+  white-space: nowrap;
+  text-shadow: 0 0 6px currentColor;
+}
+
+/* 核心发现卡片 */
+.finding-card {
+  background: #00ff8808;
+  border-left: 3px solid #00ff88;
+  padding: 16px;
+  margin: 12px 0;
+  border-radius: 0 8px 8px 0;
+}
+.finding-card .finding-label {
+  font-size: 0.7rem;
+  color: #ff00ff;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+.finding-card .finding-content {
+  font-size: 0.9rem;
+  line-height: 1.8;
+  color: #ccddcc;
+}
+
+/* 能量条 */
+.energy-bar-container {
+  margin: 16px 0;
+  padding: 16px;
+  background: #0d111788;
+  border-radius: 8px;
+  border: 1px solid #00ff8822;
+}
+.energy-label {
+  font-size: 0.8rem;
+  color: #00ff88aa;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+}
+.energy-bar {
+  height: 20px;
+  background: #111;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+.energy-fill {
+  height: 100%;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #00ff88, #00d4ff, #ff00ff);
+  transition: width 2s ease-out;
+  position: relative;
+  box-shadow: 0 0 15px #00ff8844;
+}
+.energy-fill::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 20px; height: 100%;
+  background: linear-gradient(90deg, transparent, #ffffff44);
+  animation: energyShine 1.5s ease-in-out infinite;
+}
+@keyframes energyShine {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+.energy-comment {
+  font-size: 0.75rem;
+  color: #00ff8866;
+  margin-top: 8px;
+  font-style: italic;
+}
+
+/* 观测建议 */
+.advice-card {
+  background: #10182088;
+  border: 1px solid #ff00ff33;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 12px 0;
+}
+.advice-card .advice-icon {
+  display: inline-block;
+  width: 28px; height: 28px;
+  line-height: 28px;
+  text-align: center;
+  background: #ff00ff22;
+  border-radius: 50%;
+  margin-right: 8px;
+  font-size: 0.85rem;
+}
+.advice-card .advice-text {
+  font-size: 0.85rem;
+  color: #ddccee;
+  line-height: 1.7;
+}
+.advice-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+.advice-item:last-child { margin-bottom: 0; }
+
+/* 按钮组 */
+.report-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.action-btn {
+  padding: 12px 24px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  flex: 1;
+  min-width: 140px;
+  text-align: center;
+}
+.action-btn.primary {
+  background: linear-gradient(135deg, #00ff8833, #00ff8855);
+  color: #00ff88;
+  border: 1px solid #00ff88;
+}
+.action-btn.primary:hover {
+  background: linear-gradient(135deg, #00ff8855, #00ff8877);
+  box-shadow: 0 0 20px #00ff8833;
+}
+.action-btn.secondary {
+  background: linear-gradient(135deg, #ff00ff22, #ff00ff44);
+  color: #ff88ff;
+  border: 1px solid #ff00ff66;
+}
+.action-btn.secondary:hover {
+  background: linear-gradient(135deg, #ff00ff44, #ff00ff66);
+  box-shadow: 0 0 20px #ff00ff33;
+}
+
+/* 功德按钮 */
+.merit-btn {
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #ffcc0088;
+  background: #ffcc0008;
+  border: 1px dashed #ffcc0033;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.3s;
+}
+.merit-btn:hover {
+  color: #ffcc00cc;
+  background: #ffcc0015;
+  border-color: #ffcc0066;
+}
+
+/* 分享卡片样式 */
+.share-overlay {
+  position: fixed; inset: 0;
+  background: #000000ee;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s;
+}
+.share-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+.share-card-preview {
+  width: 320px;
+  background: #f5f5f0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px #00000088;
+  position: relative;
+}
+.share-card-preview .share-grid-bg {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(#ccc 1px, transparent 1px),
+    linear-gradient(90deg, #ccc 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.3;
+}
+.share-card-inner {
+  position: relative;
+  padding: 20px;
+  z-index: 2;
+}
+.share-card-inner .share-title {
+  text-align: center;
+  color: #333;
+  font-size: 0.8rem;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+.share-sample-box {
+  width: 100%;
+  height: 160px;
+  border: 2px solid #666;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #050510;
+  margin-bottom: 12px;
+  position: relative;
+}
+.share-tag {
+  display: inline-block;
+  background: #00ff8822;
+  color: #008844;
+  border: 1px solid #00884444;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  margin-right: 6px;
+  margin-bottom: 6px;
+}
+.share-report-id {
+  text-align: center;
+  color: #999;
+  font-size: 0.65rem;
+  margin-top: 12px;
+  letter-spacing: 1px;
+}
+.share-cta {
+  text-align: center;
+  color: #666;
+  font-size: 0.75rem;
+  margin-top: 8px;
+  font-style: italic;
+}
+.share-close-btn {
+  margin-top: 16px;
+  padding: 10px 30px;
+  background: transparent;
+  border: 1px solid #ffffff44;
+  color: #ffffff88;
+  font-family: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.3s;
+}
+.share-close-btn:hover {
+  border-color: #ffffff88;
+  color: #fff;
+}
+
+/* 场景切换动画 */
+.scene.fade-in {
+  animation: sceneFadeIn 0.8s ease forwards;
+}
+@keyframes sceneFadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* 报告内容的入场动画 */
+.report-card.animate-in {
+  animation: cardSlideIn 0.6s ease forwards;
+  opacity: 0;
+}
+@keyframes cardSlideIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 页脚 */
+.page-footer {
+  text-align: center;
+  padding: 20px 0;
+  font-size: 0.75rem;
+  color: #ffffff44;
+}
+.page-footer a {
+  color: #8A2BE2;
+  text-decoration: none;
+}
+.page-footer a:hover {
+  text-decoration: underline;
+}
+
+/* 滚动条美化 */
+#scene-report::-webkit-scrollbar {
+  width: 4px;
+}
+#scene-report::-webkit-scrollbar-track {
+  background: #0a0a12;
+}
+#scene-report::-webkit-scrollbar-thumb {
+  background: #00ff8833;
+  border-radius: 2px;
+}
+
+/* 抖动动画 */
+@keyframes shake {
+  0%, 100% { transform: translateX(-50%) translateX(0); }
+  20% { transform: translateX(-50%) translateX(-5px); }
+  40% { transform: translateX(-50%) translateX(5px); }
+  60% { transform: translateX(-50%) translateX(-3px); }
+  80% { transform: translateX(-50%) translateX(3px); }
+}
+
+/* 打字机效果 */
+.typewriter {
+  overflow: hidden;
+  border-right: 2px solid #00ff88;
+  white-space: nowrap;
+  animation: typing 2s steps(20, end), blink 0.8s step-end infinite;
+}
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}
+@keyframes blink {
+  50% { border-color: transparent; }
+}
+
+/* 定格画面效果 */
+.frozen-frame {
+  position: relative;
+}
+.frozen-frame::after {
+  content: 'CAPTURED';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
+  font-weight: bold;
+  color: #ff004488;
+  letter-spacing: 8px;
+  text-shadow: 0 0 20px #ff004444;
+  pointer-events: none;
+}
+
+/* ============================
+   微信浏览器兼容性优化
+   ============================ */
+/* 修复微信浏览器中 fixed 定位问题 */
+@supports (-webkit-overflow-scrolling: touch) {
+  .scene {
+    -webkit-overflow-scrolling: touch;
+  }
+  #scene-report {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* 微信内置浏览器触摸优化 */
+button, .start-btn, .capture-btn, .action-btn, .merit-btn, .share-close-btn {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* 防止微信浏览器中文字选中 */
+.stream-item, .radar-container, .landing-text h1 {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* 修复 iOS/微信 Safari 中动画性能 */
+.stream-item {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  will-change: transform, opacity;
+}
+.radar-sweep {
+  -webkit-transform: translateZ(0);
+  will-change: transform;
+}
+
+/* 小屏手机适配（如 iPhone SE） */
+@media (max-height: 600px) {
+  .radar-container {
+    width: 200px;
+    height: 200px;
+    margin-bottom: 1rem;
+  }
+  .landing-text h1 {
+    font-size: 1.5rem !important;
+  }
+  .landing-text p {
+    font-size: 0.8rem !important;
+    margin-bottom: 1rem !important;
+  }
+  .start-btn {
+    padding: 10px 24px;
+    font-size: 0.95rem;
+  }
+  .capture-btn {
+    bottom: 10%;
+    padding: 14px 28px;
+    font-size: 1rem;
+  }
+  .capture-frame {
+    height: 45vh;
+  }
+}
+
+/* 超小屏 */
+@media (max-height: 500px) {
+  .radar-container {
+    width: 160px;
+    height: 160px;
+  }
+  .capture-frame {
+    height: 40vh;
+  }
+}
+
+/* 安全区域适配（iPhone X及以上） */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .capture-btn {
+    padding-bottom: calc(18px + env(safe-area-inset-bottom));
+  }
+  #scene-report {
+    padding-bottom: calc(40px + env(safe-area-inset-bottom));
+  }
+}

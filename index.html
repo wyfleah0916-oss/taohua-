@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>赛博桃花检测器 | 量子级缘分粒子分析</title>
+  <!-- 微信分享 Open Graph 元标签 -->
+  <meta property="og:title" content="赛博桃花检测器 - 你的量子桃花运来了！" />
+  <meta property="og:description" content="用量子力学分析你的赛博桃花运，一本正经地胡说八道。点击测试，看看你的缘分粒子是什么类型！" />
+  <meta property="og:type" content="website" />
+  <meta name="description" content="用量子力学分析你的赛博桃花运，一本正经地胡说八道。点击测试，看看你的缘分粒子是什么类型！" />
+  <!-- 微信浏览器兼容性 -->
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-black text-green-400 overflow-hidden select-none">
+
+  <!-- ========== 第一步：启动页 ========== -->
+  <div id="scene-landing" class="scene active">
+    <div class="radar-container">
+      <!-- 雷达扫描线 -->
+      <div class="radar-screen">
+        <div class="radar-grid"></div>
+        <div class="radar-sweep"></div>
+        <div class="radar-ring ring-1"></div>
+        <div class="radar-ring ring-2"></div>
+        <div class="radar-ring ring-3"></div>
+        <!-- 像素佛头 -->
+        <div class="pixel-buddha" id="pixelBuddha"></div>
+        <!-- 雷达上的随机光点 -->
+        <div class="radar-dots" id="radarDots"></div>
+      </div>
+    </div>
+    <div class="landing-text">
+      <h1 class="text-3xl md:text-5xl font-bold mb-3 glitch-text" data-text="赛博命理，科学上分">赛博命理，科学上分</h1>
+      <p class="text-base md:text-lg opacity-70 mb-8 tracking-widest">「点击屏幕，观测你的抽象缘分粒子流」</p>
+      <button id="btnStart" class="start-btn">
+        <span class="btn-scan-line"></span>
+        <i class="fas fa-satellite-dish mr-2"></i> 启动量子观测
+      </button>
+    </div>
+    <!-- 底部扫描线装饰 -->
+    <div class="scanline-overlay"></div>
+  </div>
+
+  <!-- ========== 第二步：数据流截屏 ========== -->
+  <div id="scene-stream" class="scene">
+    <div class="stream-container" id="streamContainer">
+      <!-- 数据流内容由JS动态填充 -->
+    </div>
+    <!-- 截图框 - 明确显示截屏区域 -->
+    <div class="capture-frame-overlay">
+      <div class="capture-frame" id="captureFrame">
+        <div class="frame-corner top-left"></div>
+        <div class="frame-corner top-right"></div>
+        <div class="frame-corner bottom-left"></div>
+        <div class="frame-corner bottom-right"></div>
+        <div class="frame-label-top">⟨ 量子观测窗口 ⟩</div>
+        <div class="frame-label-bottom">框内粒子将被捕获</div>
+        <div class="frame-scan-line"></div>
+      </div>
+    </div>
+    <!-- 倒计时提示 -->
+    <div class="countdown-bar" id="countdownBar">
+      <div class="countdown-inner" id="countdownInner"></div>
+    </div>
+    <div class="countdown-text" id="countdownText">缘分粒子正在涌入…</div>
+    <!-- 量子截屏按钮 -->
+    <button id="btnCapture" class="capture-btn">
+      <span class="capture-pulse"></span>
+      <span class="capture-label">就是现在！量子截屏！</span>
+    </button>
+    <!-- 拍照闪光效果 -->
+    <div class="flash-overlay" id="flashOverlay"></div>
+    <!-- CRT扫描线 -->
+    <div class="crt-lines"></div>
+  </div>
+
+  <!-- ========== 第三步：报告页 ========== -->
+  <div id="scene-report" class="scene">
+    <div class="report-wrapper" id="reportWrapper">
+      <!-- 报告内容由JS动态生成 -->
+    </div>
+  </div>
+
+  <!-- 全局粒子背景 -->
+  <canvas id="particleBg" class="particle-canvas"></canvas>
+
+  <!-- 音效（可选，不创建文件） -->
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
