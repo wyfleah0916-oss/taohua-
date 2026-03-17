@@ -110,7 +110,7 @@ function renderPixelBuddha() {
 // ===== 雷达光点 =====
 function initRadarDots() {
   const container = els.radarDots;
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < 12; i++) {
     const dot = document.createElement('div');
     dot.className = 'radar-dot';
     const angle = Math.random() * Math.PI * 2;
@@ -120,7 +120,52 @@ function initRadarDots() {
     dot.style.left = `${x}%`;
     dot.style.top = `${y}%`;
     dot.style.animationDelay = `${Math.random() * 2}s`;
+    // 随机颜色变体
+    if (Math.random() > 0.6) {
+      dot.style.background = '#ff69b4';
+      dot.style.boxShadow = '0 0 6px #ff69b4, 0 0 12px #ff69b444';
+    }
     container.appendChild(dot);
+  }
+}
+
+// ===== 雷达桃花标记 =====
+function initRadarPeachMarks() {
+  const container = document.getElementById('radarPeachMarks');
+  if (!container) return;
+  
+  const peachIcons = ['🌸', '💗', '✿', '❀', '🩷'];
+  
+  function spawnMark() {
+    const mark = document.createElement('div');
+    mark.className = 'radar-peach-mark';
+    mark.textContent = peachIcons[Math.floor(Math.random() * peachIcons.length)];
+    
+    const angle = Math.random() * Math.PI * 2;
+    const radius = 15 + Math.random() * 75;
+    const x = 50 + Math.cos(angle) * radius / 2;
+    const y = 50 + Math.sin(angle) * radius / 2;
+    
+    mark.style.left = `${x}%`;
+    mark.style.top = `${y}%`;
+    mark.style.animationDelay = `${Math.random() * 1}s`;
+    mark.style.animationDuration = `${2 + Math.random() * 2}s`;
+    
+    container.appendChild(mark);
+    
+    setTimeout(() => mark.remove(), 4000);
+  }
+  
+  // 定期生成桃花标记
+  setInterval(() => {
+    if (state.currentScene === 'landing') {
+      spawnMark();
+    }
+  }, 800);
+  
+  // 初始一批
+  for (let i = 0; i < 4; i++) {
+    setTimeout(() => spawnMark(), i * 400);
   }
 }
 
@@ -182,6 +227,61 @@ function initParticleBg() {
   animate();
 }
 
+// ===== 电流桃花飘落 - 升级版 =====
+function initPeachRain() {
+  const container = document.getElementById('peachRain');
+  if (!container) return;
+
+  // 桃花花瓣符号 + 电流风格 - 更多种类
+  const petals = ['🌸', '💮', '🏵️', '✿', '❀', '❁', '🌺', '💗', '🩷', '⚡', '✨', '💫', '🌷'];
+  // 霓虹赛博色系 - 更丰富
+  const glowColors = ['#ff69b4', '#ff00ff', '#ff1493', '#ff77aa', '#cc66ff', '#00ff88', '#00d4ff', '#ff44aa', '#ffaacc'];
+
+  function createPetal() {
+    const petal = document.createElement('div');
+    petal.className = 'peach-petal';
+
+    const symbol = petals[Math.floor(Math.random() * petals.length)];
+    const glowColor = glowColors[Math.floor(Math.random() * glowColors.length)];
+    const leftPos = Math.random() * 100;
+    const size = 0.7 + Math.random() * 1.5;
+    const duration = 3.5 + Math.random() * 5;
+    const delay = Math.random() * 0.3;
+
+    petal.style.setProperty('--petal-glow', glowColor);
+    petal.style.left = `${leftPos}%`;
+    petal.style.fontSize = `${size}rem`;
+    petal.style.animationDuration = `${duration}s`;
+    petal.style.animationDelay = `${delay}s`;
+
+    // 花瓣本体 + 电流小火花装饰（增加到4个）
+    petal.innerHTML = `
+      <span style="text-shadow: 0 0 10px ${glowColor}, 0 0 20px ${glowColor}66, 0 0 40px ${glowColor}22;">${symbol}</span>
+      <span class="petal-spark" style="--petal-glow:${glowColor};"></span>
+      <span class="petal-spark" style="--petal-glow:${glowColor};"></span>
+      <span class="petal-spark" style="--petal-glow:${glowColor};"></span>
+      <span class="petal-spark" style="--petal-glow:${glowColor};"></span>
+    `;
+
+    container.appendChild(petal);
+
+    // 动画结束后移除
+    setTimeout(() => {
+      petal.remove();
+    }, (duration + delay) * 1000 + 200);
+  }
+
+  // 初始一批 - 更多
+  for (let i = 0; i < 8; i++) {
+    setTimeout(() => createPetal(), i * 250);
+  }
+
+  // 持续生成 - 更高密度
+  setInterval(() => {
+    createPetal();
+  }, 450);
+}
+
 // ===== 数据流控制 =====
 function startStream() {
   switchScene('stream');
@@ -200,9 +300,9 @@ function startStream() {
     setTimeout(() => spawnStreamElement(els.streamContainer), i * 50);
   }
 
-  // 启动倒计时（总共约15秒，但按钮随时可点）
+  // 启动倒计时（总共约30秒，按钮随时可点）
   els.countdownInner.style.width = '100%';
-  const totalTime = 15000;
+  const totalTime = 30000;
   const step = 50;
   let elapsed = 0;
 
@@ -213,16 +313,19 @@ function startStream() {
     state.countdownValue = pct;
 
     // 更新提示文字
-    if (pct > 75) {
-      els.countdownText.textContent = '缘分粒子正在涌入…';
-    } else if (pct > 50) {
-      els.countdownText.textContent = '⚡ 粒子密度上升中，感觉对了就出手！';
+    if (pct > 80) {
+      els.countdownText.textContent = '✨ 缘分碎片正在疯狂涌入…';
+    } else if (pct > 60) {
+      els.countdownText.textContent = '👀 看到心动的碎片了吗？点击下方按钮截图！';
       els.countdownText.style.color = '#00ff88aa';
-    } else if (pct > 25) {
-      els.countdownText.textContent = '⚡ 能量波动加剧！凭直觉出手！';
+    } else if (pct > 40) {
+      els.countdownText.textContent = '⚡ 能量越来越野了！感觉对了就戳截图！';
+      els.countdownText.style.color = '#00d4ffaa';
+    } else if (pct > 20) {
+      els.countdownText.textContent = '🔮 宇宙在暗示你！快点下面按钮截图叭！';
       els.countdownText.style.color = '#ffcc00aa';
     } else if (pct > 8) {
-      els.countdownText.textContent = '🔥 粒子即将逃逸！快截屏！';
+      els.countdownText.textContent = '🔥 再不点截图粒子就跑光啦！快快快！';
       els.countdownText.style.color = '#ff4444aa';
     } else {
       // 自动截屏
@@ -263,7 +366,7 @@ function handleCapture() {
   // 冻结画面
   els.streamContainer.classList.add('frozen-frame');
   els.btnCapture.style.display = 'none';
-  els.countdownText.textContent = '📸 量子态已坍缩！正在解析缘分粒子…';
+  els.countdownText.textContent = '📸 啪！抓到了！缘分碎片正在被解码…';
   els.countdownText.style.color = '#00ff88';
 
   // 1.5秒后切换到报告页
@@ -303,6 +406,7 @@ function bindReportEvents() {
   const btnShare = document.getElementById('btnShare');
   const btnRetry = document.getElementById('btnRetry');
   const btnMerit = document.getElementById('btnMerit');
+  const btnSaveLongImg = document.getElementById('btnSaveLongImg');
 
   if (btnShare) {
     btnShare.addEventListener('click', () => {
@@ -319,7 +423,7 @@ function bindReportEvents() {
   if (btnMerit) {
     btnMerit.addEventListener('click', () => {
       state.meritCount++;
-      btnMerit.innerHTML = `🕯️ 功德 +${state.meritCount} | 服务器已续命 ${state.meritCount} 秒`;
+      btnMerit.innerHTML = `🕯️ 咚 ×${state.meritCount} | 月老已收到你的催单，加急处理中`;
       btnMerit.style.color = '#ffcc00cc';
       
       // 加一个小动画
@@ -327,6 +431,99 @@ function bindReportEvents() {
       setTimeout(() => { btnMerit.style.transform = 'scale(1)'; }, 200);
     });
   }
+
+  if (btnSaveLongImg) {
+    btnSaveLongImg.addEventListener('click', () => {
+      generateLongImage();
+    });
+  }
+}
+
+// ===== 生成报告长图 =====
+async function generateLongImage() {
+  const btn = document.getElementById('btnSaveLongImg');
+  if (!btn) return;
+  
+  // 防止重复点击
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 正在生成长图，请稍候…';
+
+  try {
+    const reportWrapper = document.getElementById('reportWrapper');
+    
+    // 使用html2canvas渲染报告为canvas
+    const canvas = await html2canvas(reportWrapper, {
+      backgroundColor: '#0a0a12',
+      scale: 2, // 高清2倍
+      useCORS: true,
+      logging: false,
+      // 忽略按钮区域和页脚
+      ignoreElements: (element) => {
+        if (element.id === 'btnShare' || element.id === 'btnRetry' || 
+            element.id === 'btnMerit' || element.id === 'btnSaveLongImg') return true;
+        if (element.classList && element.classList.contains('report-actions')) return true;
+        if (element.classList && element.classList.contains('merit-btn')) return true;
+        if (element.classList && element.classList.contains('save-img-btn')) return true;
+        if (element.classList && element.classList.contains('page-footer')) return true;
+        return false;
+      }
+    });
+
+    // 将canvas转为图片URL
+    const imgDataUrl = canvas.toDataURL('image/png');
+
+    // 展示长图预览弹层
+    showLongImagePreview(imgDataUrl);
+  } catch (err) {
+    console.error('生成长图失败:', err);
+    alert('生成长图失败，请重试');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-image"></i> 📸 生成报告长图（长按可保存）';
+  }
+}
+
+// ===== 长图预览弹层 =====
+function showLongImagePreview(imgDataUrl) {
+  // 移除已存在的弹层
+  const existing = document.querySelector('.longimg-overlay');
+  if (existing) existing.remove();
+
+  const overlay = document.createElement('div');
+  overlay.className = 'longimg-overlay';
+  overlay.innerHTML = `
+    <div class="longimg-header">
+      <span class="longimg-title">📸 报告长图已生成</span>
+      <button class="longimg-close-btn" id="longimgCloseBtn">✕</button>
+    </div>
+    <div class="longimg-tip">👇 长按下方图片即可保存到相册</div>
+    <div class="longimg-scroll-area">
+      <img src="${imgDataUrl}" class="longimg-result" alt="赛博桃花检测报告长图" />
+    </div>
+    <div class="longimg-bottom-tip">长按图片 → 保存到手机相册 → 分享给好友</div>
+  `;
+
+  document.body.appendChild(overlay);
+
+  // 激活动画
+  requestAnimationFrame(() => {
+    overlay.classList.add('active');
+  });
+
+  // 关闭按钮
+  const closeBtn = overlay.querySelector('#longimgCloseBtn');
+  closeBtn.addEventListener('click', () => {
+    overlay.classList.remove('active');
+    setTimeout(() => overlay.remove(), 400);
+  });
+
+  // 点击背景关闭（但不在图片上触发）
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) {
+      overlay.classList.remove('active');
+      setTimeout(() => overlay.remove(), 400);
+    }
+  });
 }
 
 // ===== 重置重玩 =====
@@ -350,8 +547,14 @@ function init() {
   // 初始化雷达光点
   initRadarDots();
 
+  // 初始化雷达桃花标记
+  initRadarPeachMarks();
+
   // 初始化粒子背景
   initParticleBg();
+
+  // 初始化电流桃花飘落
+  initPeachRain();
 
   // 绑定启动按钮
   els.btnStart.addEventListener('click', () => {

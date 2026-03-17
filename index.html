@@ -16,32 +16,78 @@
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
+  <!-- html2canvas 用于生成报告长图 -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </head>
 <body class="bg-black text-green-400 overflow-hidden select-none">
 
   <!-- ========== 第一步：启动页 ========== -->
   <div id="scene-landing" class="scene active">
+    <!-- 背景装饰 - 赛博网格 -->
+    <div class="landing-cyber-grid"></div>
+    <!-- 背景装饰 - 浮动粒子环 -->
+    <div class="landing-orbit-ring" id="orbitRing"></div>
+
     <div class="radar-container">
+      <!-- 雷达外圈脉冲光环 -->
+      <div class="radar-outer-pulse"></div>
+      <div class="radar-outer-pulse delay-1"></div>
+      <div class="radar-outer-pulse delay-2"></div>
       <!-- 雷达扫描线 -->
       <div class="radar-screen">
         <div class="radar-grid"></div>
         <div class="radar-sweep"></div>
+        <div class="radar-sweep-trail"></div>
         <div class="radar-ring ring-1"></div>
         <div class="radar-ring ring-2"></div>
         <div class="radar-ring ring-3"></div>
+        <!-- 雷达中心桃花图标 -->
+        <div class="radar-center-icon">🌸</div>
         <!-- 像素佛头 -->
         <div class="pixel-buddha" id="pixelBuddha"></div>
         <!-- 雷达上的随机光点 -->
         <div class="radar-dots" id="radarDots"></div>
+        <!-- 雷达扫描探测到的桃花标记 -->
+        <div class="radar-peach-marks" id="radarPeachMarks"></div>
       </div>
     </div>
+
     <div class="landing-text">
-      <h1 class="text-3xl md:text-5xl font-bold mb-3 glitch-text" data-text="赛博命理，科学上分">赛博命理，科学上分</h1>
-      <p class="text-base md:text-lg opacity-70 mb-8 tracking-widest">「点击屏幕，观测你的抽象缘分粒子流」</p>
+      <!-- 顶部标签 -->
+      <div class="landing-badge">
+        <span class="badge-dot"></span>
+        QUANTUM PEACH DETECTION SYSTEM v2.0
+      </div>
+      <h1 class="text-3xl md:text-5xl font-bold mb-2 glitch-text" data-text="赛博桃花检测器">赛博桃花检测器</h1>
+      <div class="landing-subtitle">
+        <span class="subtitle-line"></span>
+        <span class="subtitle-text">量子级缘分粒子分析引擎</span>
+        <span class="subtitle-line"></span>
+      </div>
+      <p class="landing-desc">「点一下，看看宇宙给你安排了什么神仙缘分」</p>
+      <!-- 状态指示器 -->
+      <div class="landing-status">
+        <div class="status-item">
+          <span class="status-dot online"></span>
+          <span>量子场在线</span>
+        </div>
+        <div class="status-item">
+          <span class="status-dot active-pulse"></span>
+          <span>桃花粒子活跃</span>
+        </div>
+        <div class="status-item">
+          <span class="status-dot warning"></span>
+          <span>缘分待检测</span>
+        </div>
+      </div>
+      <!-- 电流桃花飘落容器 -->
+      <div class="peach-rain" id="peachRain"></div>
       <button id="btnStart" class="start-btn">
         <span class="btn-scan-line"></span>
+        <span class="btn-glow"></span>
         <i class="fas fa-satellite-dish mr-2"></i> 启动量子观测
       </button>
+      <p class="landing-hint">戳一下，命运的齿轮嘎嘣一声就转了 ⚙️</p>
     </div>
     <!-- 底部扫描线装饰 -->
     <div class="scanline-overlay"></div>
@@ -60,7 +106,7 @@
         <div class="frame-corner bottom-left"></div>
         <div class="frame-corner bottom-right"></div>
         <div class="frame-label-top">⟨ 量子观测窗口 ⟩</div>
-        <div class="frame-label-bottom">框内粒子将被捕获</div>
+        <div class="frame-label-bottom">👇 框里的碎片就是你的命运密码</div>
         <div class="frame-scan-line"></div>
       </div>
     </div>
@@ -72,7 +118,7 @@
     <!-- 量子截屏按钮 -->
     <button id="btnCapture" class="capture-btn">
       <span class="capture-pulse"></span>
-      <span class="capture-label">就是现在！量子截屏！</span>
+      <span class="capture-label">👆 戳我截图！就是现在！</span>
     </button>
     <!-- 拍照闪光效果 -->
     <div class="flash-overlay" id="flashOverlay"></div>
